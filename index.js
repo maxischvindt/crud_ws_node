@@ -44,6 +44,54 @@ app.get('/list-account', async (req, res) => {
     res.end();
 });
 
+app.post('/create-account', async (req, res) => {
+    let email = req.body.email;
+    let resp = {result: true}
+    
+    if(email) {
+        const query = {text: 'INSERT INTO account(email) VALUES($1)',values: [email]}
+
+        try {
+            const result = await client.query(query);
+        } catch(err) {
+            resp.result = false;
+        }
+          
+        console.log('OK /create-account', resp);
+        res.json(resp);
+    } else {
+        res.statusCode = 400;
+        res.statusMessage = 'Email is required';
+    }
+    
+    res.end();
+});
+
+app.put('/update-account', async (req, res) => {
+    let params = req.body;
+    let resp = {result: true}
+    
+    if(params.id && params.email && params.newEmail) {
+        
+        const query = {text: 'UPDATE account SET email = $3 WHERE id = $1 AND email = $2;',values: [params.id, params.email, params.newEmail]}
+
+        try {
+            const result = await client.query(query);
+            if(result.rowCount > 0) resp.result = true;
+        } catch(err) {
+            resp.result = false;
+        }
+        
+        res.json(resp);
+        console.log('OK /update-account', resp);
+    } else {
+        res.statusCode = 400;
+        res.statusMessage = 'Parameters id, email and newEmail are required';
+    }
+    
+    res.end();
+});
+
 async function start() {
     client = new Client({connectionString: config.url_postgresql})
     client.connect()
