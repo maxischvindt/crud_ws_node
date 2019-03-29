@@ -19,7 +19,6 @@ export class List extends React.Component {
             <li className="list-group-item" key={account.id}>{account.email}</li>
           ))}
         </ul>
-        {this.state.accounts.length}
       </div>
     );
   }
