@@ -12,6 +12,15 @@ function setCORSHeaders(req, res) {
     
 }
 
+async function executeQuery(query) {
+    try {
+        const result = await client.query(query);
+        if(result.rowCount > 0) return true;
+    } catch(err) {}
+
+    return false;
+}
+
 let client = null;
 const app = express();
 
@@ -46,16 +55,12 @@ app.get('/list-account', async (req, res) => {
 
 app.post('/create-account', async (req, res) => {
     let email = req.body.email;
-    let resp = {result: true}
+    let resp = {result: false}
     
     if(email) {
         const query = {text: 'INSERT INTO account(email) VALUES($1)',values: [email]}
 
-        try {
-            const result = await client.query(query);
-        } catch(err) {
-            resp.result = false;
-        }
+        resp.result = await executeQuery(query);
           
         console.log('OK /create-account', resp);
         res.json(resp);
@@ -69,24 +74,39 @@ app.post('/create-account', async (req, res) => {
 
 app.put('/update-account', async (req, res) => {
     let params = req.body;
-    let resp = {result: true}
+    let resp = {result: false}
     
     if(params.id && params.email && params.newEmail) {
         
         const query = {text: 'UPDATE account SET email = $3 WHERE id = $1 AND email = $2;',values: [params.id, params.email, params.newEmail]}
 
-        try {
-            const result = await client.query(query);
-            if(result.rowCount > 0) resp.result = true;
-        } catch(err) {
-            resp.result = false;
-        }
+        resp.result = await executeQuery(query);
         
         res.json(resp);
         console.log('OK /update-account', resp);
     } else {
         res.statusCode = 400;
         res.statusMessage = 'Parameters id, email and newEmail are required';
+    }
+    
+    res.end();
+});
+
+app.delete('/delete-account', async (req, res) => {
+    let params = req.body;
+    let resp = {result: false}
+    
+    if(params.id && params.email) {
+        
+        const query = {text: 'DELETE FROM account WHERE id = $1 AND email = $2;', values: [params.id, params.email]}
+
+        resp.result = await executeQuery(query);
+        
+        res.json(resp);
+        console.log('OK /delete-account', resp);
+    } else {
+        res.statusCode = 400;
+        res.statusMessage = 'Parameters id, email are required';
     }
     
     res.end();
