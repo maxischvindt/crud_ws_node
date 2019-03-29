@@ -2,6 +2,7 @@ const {Client} = require('pg');
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
+const uuidv1 = require('uuid/v1');
 
 function setCORSHeaders(req, res) {
     res.setHeader('Access-Control-Allow-Origin','*');
@@ -56,9 +57,11 @@ app.get('/list-account', async (req, res) => {
 app.post('/create-account', async (req, res) => {
     let email = req.body.email;
     let resp = {result: false}
-    
+    const id = uuidv1();
+
     if(email) {
-        const query = {text: 'INSERT INTO account(email) VALUES($1)',values: [email]}
+
+        const query = {text: 'INSERT INTO account(id,email) VALUES($1,$2)',values: [id,email]}
 
         resp.result = await executeQuery(query);
           
@@ -113,12 +116,21 @@ app.delete('/delete-account', async (req, res) => {
 });
 
 async function start() {
-    client = new Client({connectionString: config.url_postgresql})
-    client.connect()
-    
-    app.listen(config.port);
-    
+    client = new Client({connectionString: config.url_postgresql});
+    client.connect();
     console.log("Connected to",config.url_postgresql);
+
+    const query = 
+    `CREATE TABLE "public"."account" ("id" character varying NOT NULL, "email" character varying NOT NULL, CONSTRAINT "account_email" UNIQUE ("email"), CONSTRAINT "account_id" PRIMARY KEY ("id")) WITH (oids = false);`;
+
+    try {
+        await client.query(query);
+        console.log("The table public.account has been created.");
+    } catch(err) {
+        console.log("The table public.account exist.");
+    }
+
+    app.listen(config.port);
     console.log("Server is listening to port",config.port);
 }
   
