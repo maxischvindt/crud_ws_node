@@ -11,6 +11,7 @@ function setCORSHeaders(req, res) {
     "GET, PUT, POST, DELETE, OPTIONS"
   );
   res.setHeader(
+    "Access-Control-Allow-Origin",
     "Access-Control-Allow-Headers",
     "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, X-Signature, Access-Control-Request-Headers"
   );
@@ -41,14 +42,14 @@ app.use("*", function(req, res, next) {
 });
 
 app.all("/", function(req, res) {
-    if (['production'].includes(process.env.NODE_ENV)) {
-        app.use(express.static('client/build'));
-        const path = require('path');
-        res.sendFile(path.resolve('client', 'build', 'index.html'));
-    } else {
-        res.send("https://github.com/Cuchu/crud_ws_node");
-        res.end();
-    }
+  if (["production"].includes(process.env.NODE_ENV)) {
+    app.use(express.static("client/build"));
+    const path = require("path");
+    res.sendFile(path.resolve("client", "build", "index.html"));
+  } else {
+    res.send("https://github.com/Cuchu/crud_ws_node");
+    res.end();
+  }
 });
 
 app.get("/list-account", async (req, res) => {
