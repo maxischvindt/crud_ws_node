@@ -39,7 +39,7 @@ app.use("*", function(req, res, next) {
   setCORSHeaders(req, res);
   next();
 });
-console.log(process.env.NODE_ENV);
+
 app.all("/", function(req, res) {
     if (['production'].includes(process.env.NODE_ENV)) {
         app.use(express.static('client/build'));
