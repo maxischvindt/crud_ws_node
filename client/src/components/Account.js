@@ -60,6 +60,7 @@ export class Account extends React.Component {
                   <div className="input-group-text">@</div>
                 </div>
                 <input
+                  id="account-email"
                   type="text"
                   className="form-control"
                   ref={(input) => (this.input = input)}
@@ -70,6 +71,7 @@ export class Account extends React.Component {
             </div>
             <div className="col-auto my-1">
               <input
+                id="submit-button"
                 type="submit"
                 value="Submit"
                 disabled={this.state.disabled}
