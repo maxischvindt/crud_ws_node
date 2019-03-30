@@ -5,9 +5,7 @@ import config from "../config";
 export class Account extends React.Component {
   state = {
     disabled: "disabled",
-    emailValid: false,
-    editAccountId: null,
-    editEmail: null,
+    emailValid: false
   };
   constructor(props) {
     super(props);
