@@ -6,17 +6,23 @@ import { List } from "./components/List";
 import { Account } from "./components/Account";
 
 class App extends Component {
-  state = { email: null };
+  state = { newEmail: null, lastUpdate: 0 };
   constructor(props) {
     super(props);
-
-
     this.changeEmail = this.changeEmail.bind(this);
+    this.reloadList = this.reloadList.bind(this);
   }
 
   changeEmail(newEmail) {
     this.setState({
-      email: newEmail
+      newEmail: newEmail
+    });
+  }
+
+  reloadList(time) {
+    this.setState({
+      newEmail:null,
+      lastUpdate: time,
     });
   }
 
@@ -27,8 +33,14 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
         </header>
         <br />
-        <Account changeEmail={this.changeEmail} />
-        <List email={this.state.email} />
+        <Account
+          changeEmail={this.changeEmail}
+          reloadList={this.reloadList}
+        />
+        <List
+          newEmail={this.state.newEmail}
+          lastUpdate={this.state.lastUpdate}
+        />
       </div>
     );
   }

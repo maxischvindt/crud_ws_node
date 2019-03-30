@@ -3,39 +3,45 @@ import axios from "axios";
 import config from "../config";
 
 export class Account extends React.Component {
-  state = { disabled: "disabled", emailValid: false, newEmail: null };
+  state = { disabled: "disabled", emailValid: false, editAccountId: null, editEmail: null };
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleUserInput = this.handleUserInput.bind(this);
+    this.handleEmailInput = this.handleEmailInput.bind(this);
+  }
+
+  createAccount(email) {
+    axios
+      .post(`${config.web_service}/create-account`, { email })
+      .then((response) => {
+        if (response.data.result) {
+          this.props.reloadList(Math.floor(Date.now()));
+          this.input.value = "";
+        } else {
+          alert("Duplicate email");
+        }
+      });
   }
 
   /* Submit email, clean input and changeEmail to update list with emails */
   handleSubmit(e) {
-    if (this.state.emailValid) {
-      this.setState({newEmail: this.input.value});
-      axios
-        .post(`${config.web_service}/create-account`, {
-          email: this.input.value,
-        })
-        .then((response) => {
-          if (response.data.result) {
-            this.props.changeEmail(this.state.newEmail);
-            this.input.value = "";
-          } else {
-            alert("Duplicate email");
-          }
-        });
-    }
+    if (this.state.emailValid) 
+      this.createAccount(this.input.value);
+
     e.preventDefault();
   }
 
   /* Validate email and enable o disable submit button */
-  handleUserInput(e) {
+  handleEmailInput(e) {
     const email = this.input.value;
     let emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
     let disabled = emailValid ? "" : "disabled";
     this.setState({ disabled, emailValid });
+    if(emailValid) {
+      this.props.changeEmail(this.input.value);
+    } else {
+      this.props.changeEmail(null);
+    }
   }
 
   render() {
@@ -56,7 +62,7 @@ export class Account extends React.Component {
                   className="form-control"
                   ref={(input) => (this.input = input)}
                   placeholder="youremail@amazing.com"
-                  onChange={(event) => this.handleUserInput(event)}
+                  onChange={(event) => this.handleEmailInput(event)}
                 />
               </div>
             </div>
