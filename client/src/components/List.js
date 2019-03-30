@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../config";
 
 export class List extends React.Component {
-  state = { accounts: [] , newEmail: null, lastUpdate: null };
+  state = { accounts: [], newEmail: null, lastUpdate: null };
   constructor(props) {
     super(props);
     this.handleClickDelete = this.handleClickDelete.bind(this);
@@ -27,18 +27,18 @@ export class List extends React.Component {
         }
       });
   }
-  
+
   editAccount(id, email, newEmail) {
-    if(newEmail !== null) {
+    if (newEmail !== null) {
       axios
-      .put(`${config.web_service}/update-account`, { id, email, newEmail })
-      .then((res) => {
-        if (res.data.result) {
-          this.getAccounts();
-        } else {
-          alert("Duplicate email");
-        }
-      });
+        .put(`${config.web_service}/update-account`, { id, email, newEmail })
+        .then((res) => {
+          if (res.data.result) {
+            this.getAccounts();
+          } else {
+            alert("Duplicate email");
+          }
+        });
     } else {
       alert("The new email is invalid!");
     }
@@ -51,19 +51,19 @@ export class List extends React.Component {
 
   /* When change props - 'lastUpdate / newEmail' */
   componentWillReceiveProps() {
-    if(this.state.lastUpdate !== this.props.lastUpdate) {
+    if (this.state.lastUpdate !== this.props.lastUpdate) {
       this.getAccounts();
     }
-    if(this.props.newEmail) {
+    if (this.props.newEmail) {
       console.log("in event", this.props.newEmail);
-      this.setState({newEmail:this.props.newEmail});
+      this.setState({ newEmail: this.props.newEmail });
     }
   }
 
   handleClickDelete(id, email) {
     this.deleteAccount(id, email);
   }
-  
+
   handleClickEdit(id, email, newEmail) {
     this.editAccount(id, email, newEmail);
   }
@@ -71,9 +71,9 @@ export class List extends React.Component {
   render() {
     let newEmail = this.props.newEmail;
     let editMode = false;
-    let disabled = 'disabled';
-    if(newEmail !== null) {
-      disabled = '';
+    let disabled = "disabled";
+    if (newEmail !== null) {
+      disabled = "";
       editMode = true;
     }
 
@@ -88,15 +88,16 @@ export class List extends React.Component {
                   <button
                     type="button"
                     onClick={() =>
-                      this.handleClickEdit(account.id, account.email, this.props.newEmail)
+                      this.handleClickEdit(
+                        account.id,
+                        account.email,
+                        this.props.newEmail
+                      )
                     }
                     className="btn btn-primary btn-sm"
-                    disabled= {disabled}
+                    disabled={disabled}
                   >
-                  { editMode
-                   ? "Replace by " + newEmail
-                   : "Invalid Email"
-                  }           
+                    {editMode ? "Replace by " + newEmail : "Invalid Email"}
                   </button>
                   &nbsp;&nbsp;
                   <button

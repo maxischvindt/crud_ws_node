@@ -15,13 +15,13 @@ class App extends Component {
 
   changeEmail(newEmail) {
     this.setState({
-      newEmail: newEmail
+      newEmail: newEmail,
     });
   }
 
   reloadList(time) {
     this.setState({
-      newEmail:null,
+      newEmail: null,
       lastUpdate: time,
     });
   }
@@ -33,10 +33,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
         </header>
         <br />
-        <Account
-          changeEmail={this.changeEmail}
-          reloadList={this.reloadList}
-        />
+        <Account changeEmail={this.changeEmail} reloadList={this.reloadList} />
         <List
           newEmail={this.state.newEmail}
           lastUpdate={this.state.lastUpdate}

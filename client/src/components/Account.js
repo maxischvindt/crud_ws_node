@@ -3,7 +3,12 @@ import axios from "axios";
 import config from "../config";
 
 export class Account extends React.Component {
-  state = { disabled: "disabled", emailValid: false, editAccountId: null, editEmail: null };
+  state = {
+    disabled: "disabled",
+    emailValid: false,
+    editAccountId: null,
+    editEmail: null,
+  };
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,8 +30,7 @@ export class Account extends React.Component {
 
   /* Submit email, clean input and changeEmail to update list with emails */
   handleSubmit(e) {
-    if (this.state.emailValid) 
-      this.createAccount(this.input.value);
+    if (this.state.emailValid) this.createAccount(this.input.value);
 
     e.preventDefault();
   }
@@ -37,7 +41,7 @@ export class Account extends React.Component {
     let emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
     let disabled = emailValid ? "" : "disabled";
     this.setState({ disabled, emailValid });
-    if(emailValid) {
+    if (emailValid) {
       this.props.changeEmail(this.input.value);
     } else {
       this.props.changeEmail(null);
