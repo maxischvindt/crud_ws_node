@@ -1,9 +1,7 @@
 const { Selector } = require("testcafe");
 
 fixture `Getting Started`
-    //.page `https://crud-ws-node.herokuapp.com/`;
-    .page `http://localhost:3000/`;
-
+    .page `https://crud-ws-node.herokuapp.com/`;
 
 //Create account
 test('Create account', async t => {
