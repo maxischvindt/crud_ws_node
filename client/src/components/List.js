@@ -86,6 +86,7 @@ export class List extends React.Component {
                 <div className="list-div-email">{account.email}</div>
                 <div className="list-div-actions">
                   <button
+                    edit-account={account.email}
                     type="button"
                     onClick={() =>
                       this.handleClickEdit(
@@ -101,6 +102,7 @@ export class List extends React.Component {
                   </button>
                   &nbsp;&nbsp;
                   <button
+                    delete-account={account.email}
                     type="button"
                     onClick={() =>
                       this.handleClickDelete(account.id, account.email)
