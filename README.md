@@ -15,9 +15,13 @@ Define your config in config.js and client/config.js or use environment variable
 Prepare project:
 
 ~~~
+npm install
+
 npm build
 
-npm run dev || npm run start
+npm run dev 
+or
+npm run start
 ~~~
 
 When you run `npm run rev` the backend runs on port 8000 and frontend on 3000. 
